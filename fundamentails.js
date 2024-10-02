@@ -1,6 +1,8 @@
 const numbers = [2, 4, 5, 4];
 // console.log(numbers[0]);
 // console.log(numbers.length);
+const [x, y] = numbers;
+// console.log(x, y);
 
 for(let i = 0; i < numbers.length; i++){
     const number = numbers[i]
@@ -21,7 +23,21 @@ const user = {
     age: 23
 }
 const myVar = 'age'
+const  {name, age} = user;
+const stringifyJSON = JSON.stringify(user);
+const studentObject = JSON.parse(stringifyJSON)
+console.log(studentObject);
 
-console.log(user.name);
-console.log(user['roll']);
-console.log(user[myVar]);
+// console.log(name, age);
+// console.log(user.name);
+// console.log(user['roll']);
+// console.log(user[myVar]);
+
+const isEven = x => x % 2 == 0;
+const numberss = [...numbers]  
+numberss.push(0);
+// console.log(numberss, numbers);
+const output = numbers.filter( number => number <= 4);
+const output2 = numbers.find( number => number <= 4);
+// console.log(output2);
+
