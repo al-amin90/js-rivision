@@ -26,7 +26,10 @@ const myVar = 'age'
 const  {name, age} = user;
 const stringifyJSON = JSON.stringify(user);
 const studentObject = JSON.parse(stringifyJSON)
-console.log(studentObject);
+// console.log(studentObject);
+const keys = Object.keys(user);
+const values = Object.values(user);
+// console.log(keys);
 
 // console.log(name, age);
 // console.log(user.name);
@@ -41,3 +44,32 @@ const output = numbers.filter( number => number <= 4);
 const output2 = numbers.find( number => number <= 4);
 // console.log(output2);
 
+// fetch('url')
+// .then(res => res.json())
+// .then(data => console.log(data))
+
+
+// truty--- 'jisan'  34, true, {}. []
+// falsy--- '', 0, false, null, undefine
+
+let mye = 4;
+if(!mye){
+
+}
+
+const money = 800;
+let food;
+
+const result1 = money > 100 ? 'brianyi kabo' : 'cha bisvut kabo';
+let drink = (money > 100 && mye > 100) ? "coke" : "pani"
+// console.log(drink);
+
+const num2 = '34';
+// console.log(parseInt(num2));
+
+const isAvtive = false;
+const showUser = () => console.log("display user");
+const hideUser = () => console.log("hide user");
+isAvtive ? showUser() : hideUser()
+isAvtive && showUser()
+!isAvtive || hideUser()
