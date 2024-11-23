@@ -1,12 +1,3 @@
-—-------------------------------- Fill filtering 2 vabe kora jai —--------------------------------
-db.test.insert( {name: "Something”} )
-db.test.insertMany([
-    {name: "Complete Web Development"},
-    {name: "Level 2 web development"}
-    ])
-db.test.find({gender: "Male"}, {name: 1, email: 1, phone: 1,  gender: 1})
-db.test.find({gender: "Male"}).project({name:1, gender: 1}) // → a method findOne kaj kore na
-
 —-------------------------------- Mongoose operator —--------------------------------
 db.test.find({age: {$eq: 12}}) → operator use ar tum rule je {} use kora
 db.test.find({age: {$ne: 12}})  → not equal
