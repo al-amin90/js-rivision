@@ -34,6 +34,9 @@ for(let key in mentor){
 function randomFunction(fn){
     return fn(2)
 }
+function randomFunction(fn){
+    return fn(2)
+}
 
 randomFunction((number) => {
     console.log(3 + number);
