@@ -1,12 +1,4 @@
-—-------------------------------- Mongoose operator —--------------------------------
-db.test.find({age: {$eq: 12}}) → operator use ar tum rule je {} use kora
-db.test.find({age: {$ne: 12}})  → not equal
-db.test.find({age: {$gt: 30 }}) → gether tha 
-db.test.find({age: {$lte: 30 }}).sort({age: -1}) → sort decending
-db.test.find({age: {$lt: 30 }}) → less than
-db.test.find({age: {$lte: 30 }})  → less than equal
-
-db.test.find(
+g hg h hg hg g h h gh
     { 
         gender: { $eq: "Female" }, 
         age: {$gte: 18 , $nin : [18, 20, 22, 26, 30] } ,
