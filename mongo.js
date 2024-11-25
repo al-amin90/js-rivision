@@ -1,17 +1,4 @@
-g hg h hg hg g h h gh
-    { 
-        gender: { $eq: "Female" }, 
-        age: {$gte: 18 , $nin : [18, 20, 22, 26, 30] } ,
-        interests: {$in: ["Cooking", "Gaming"] }
-    },
-    { age: 1, gender: 1 , interests: 1}  → implicit and , coma diye and korci
-).sort({ age: 1 })
-
-—------------------------------------------ Explicit and —-------------------------------------------
-db.test.find({ $and: [
-      {gender: "Female"},
-      {age: {$ne: 15}}, 
-      {age: {$lte: 30}}
+tt rt t t ty t 
     ] 
     
 }).project({
