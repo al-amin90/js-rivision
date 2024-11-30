@@ -133,3 +133,26 @@ db.createCollection("posts")
 // delete collection
 db.posts.drop( { writeConcern: { w: 1 } } )
 
+//problem 1
+db.pertice2.find({age: {$gt: 30}}).project({name: 1, email: 1})
+ 
+//problem 2
+db.pertice2.find(
+    {favoutiteColor: {$in: ["Maroon", "Blue"]}}
+).project({ favoutiteColor: 1 })
+
+//problem 3
+db.pertice2.find(
+    {skills: {$exists: true, $eq: [] }}
+).project({ skills: 1 })
+
+//problem 4
+db.pertice2.find(
+    {
+        $and: [
+            {skills: { $elemMatch: { "name": "JAVASCRIPT" }}},
+            {skills: { $elemMatch: { "name": "JAVA" }}}
+        ]
+
+    }
+).project({ skills: 1 })
