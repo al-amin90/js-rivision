@@ -156,3 +156,21 @@ db.pertice2.find(
 
     }
 ).project({ skills: 1 })
+
+// problem 5
+db.pertice2.updateOne(
+    { email: "amccurry3@cnet.com"},
+    { $addToSet: {skills: {"name": "Python","level": "Beginner","isLearning": true}}}
+)
+
+//problem 6
+db.pertice2.updateOne(
+    { email: "amccurry3@cnet.com"},
+    { $push: {languages: "Spanish"}}
+)
+
+//problem 7
+db.pertice2.updateOne(
+    { email: "amccurry3@cnet.com"},
+    { $pull: {skills: {name: "Python"}}}
+)
