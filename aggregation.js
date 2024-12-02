@@ -6,3 +6,4 @@ db.pertice2.aggregate([
     { $project: { gender: 1, name: 1 } },
 ])
 
+/// tommoro is my exam that why i am studying today...
