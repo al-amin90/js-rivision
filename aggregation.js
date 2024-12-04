@@ -11,35 +11,37 @@ db.pertice2.aggregate([
     //stage 1
     { $match: { gender: "Male" } },
     //stage 2
-    { $addFields: {cource: "Level-2", eduTech: "Programming Hero", moneMoto: "moner issa"}}, // original doc modifi korbe na 
+    { $addFields: { cource: "Level-2", eduTech: "Programming Hero", moneMoto: "moner issa" } }, // original doc modifi korbe na 
     //stage 3
     // {$project: {eduTech: 1, cource: 1}},
     //stage 4
-    {$out: "course-student"}, //  aggregation ar data diye new akta collection make hobe
-    {$merge: "pertice2"} // ata original doc modify korbe
+    { $out: "course-student" }, //  aggregation ar data diye new akta collection make hobe
+    { $merge: "pertice2" } // ata original doc modify korbe
 ])
 
 // -------- $group , $sum , $push aggregation stage ----------- 
 db.pertice2.aggregate([
     //stage 1 _id diya lagbe group korte 
-    { $group: { 
-        _id: "$address.country", 
-        count: {$sum: 1} , 
-        fullDoc: {$push: "$$ROOT"}} //joko akta push korte parbe
-        
+    {
+        $group: {
+            _id: "$address.country",
+            count: { $sum: 1 },
+            fullDoc: { $push: "$$ROOT" }
+        } //joko akta push korte parbe
+
     },  // poti gender ar ke group kore dise
-    
+
     //stage 2
     {
         $project: {
             count: 1,
-            "fullDoc.name": 1, 
-            "fullDoc.email": 1, 
-            "fullDoc.phone": 1, 
+            "fullDoc.name": 1,
+            "fullDoc.email": 1,
+            "fullDoc.phone": 1,
         }
     }
 ])
- 
+
 // -------- explore more about $group & $project ----------- 
 db.pertice2.aggregate([
 
@@ -47,22 +49,58 @@ db.pertice2.aggregate([
     {
         $group: {
             _id: null, // sob gulo doc te ak sate korse / 1 ta korse
-            totalSalary: {$sum: "$salary" } ,
-            maxSalary: { $max: "$salary"} ,
-            minSalary: { $min: "$salary"},
-            avgSalary: { $avg: "$salary"}
+            totalSalary: { $sum: "$salary" },
+            maxSalary: { $max: "$salary" },
+            minSalary: { $min: "$salary" },
+            avgSalary: { $avg: "$salary" }
         }
     },
     // stage 2
     {
         $project: {
-              totalSalary: 1,
-              maxSalary: 1,
-              minSalary: 1,
-              totalCost: 1,
-              averageSalry: "$avgSalary",
-              rangeBetweenMinMax: {$subtract: ["$maxSalary", "$minSalary"]},
-              totalCosts: { $add: ["$maxSalary", "$minSalary"]}
+            totalSalary: 1,
+            maxSalary: 1,
+            minSalary: 1,
+            totalCost: 1,
+            averageSalry: "$avgSalary",
+            rangeBetweenMinMax: { $subtract: ["$maxSalary", "$minSalary"] },
+            totalCosts: { $add: ["$maxSalary", "$minSalary"] }
         }
     }
 ])
+
+db.pertice2.aggregate([
+    //stage 1
+    { $unwind: "$friends" }, // arr ke sob doc ar fri ar element alada doc banabe
+
+    // stage 2
+    { $group: { _id: "$friends", count: { $sum: 1 } } }
+
+])
+
+// poti age ar common interes ber kora
+db.pertice2.aggregate([
+    //stage 1
+    {
+        $unwind: "$interests"
+
+    },
+    //stage 2
+    {
+        $group: { _id: "$age", count: { $sum: 1 }, interesPerPerson: { $push: "$interests" } } 
+
+    }
+])
+// answer: 
+{
+	"_id" : 50,
+	"count" : 6,
+	"interesPerPerson" : [
+		"Gaming",
+		"Cooking",
+		"Writing",
+		"Reading",
+		"Cooking",
+		"Writing"
+	]
+},
