@@ -87,20 +87,104 @@ db.pertice2.aggregate([
     },
     //stage 2
     {
-        $group: { _id: "$age", count: { $sum: 1 }, interesPerPerson: { $push: "$interests" } } 
+        $group: { _id: "$age", count: { $sum: 1 }, interesPerPerson: { $push: "$interests" } }
 
     }
 ])
 // answer: 
 {
-	"_id" : 50,
-	"count" : 6,
-	"interesPerPerson" : [
-		"Gaming",
-		"Cooking",
-		"Writing",
-		"Reading",
-		"Cooking",
-		"Writing"
-	]
-},
+    "_id" : 50,
+        "count" : 6,
+            "interesPerPerson" : [
+                "Gaming",
+                "Cooking",
+                "Writing",
+                "Reading",
+                "Cooking",
+                "Writing"
+            ]
+}
+
+//-------------- $bucket, $sort, and $limit aggregation stage ---------------
+db.pertice2.aggregate([
+    //stage 1
+    {
+        $bucket: { // akane boundari kore group korte pari
+            groupBy: "$age",
+            boundaries: [20, 40, 60, 80],
+            default: "80 upor ar bora gula",
+            output: {
+                count: { $sum: 1 },
+                karakaraAse: { $push: "$$ROOT" }
+            }
+        }
+    },
+    //stage 2
+    {
+        $sort: { count: 1 }
+    },
+    //stage 3
+    {
+        $limit: 2
+    },
+    //stage 4
+    {
+        $project: { count: 1 }
+    }
+])
+
+//-------------- $facet, multiple pipeline aggregation stage ---------------
+db.pertice2.aggregate([
+    {
+        $facet: {
+            //pipeline-1
+            "countFriends": [
+                //stage 1
+                { $unwind: "$friends" },
+                // stage 2
+                { $group: { _id: "$friends", count: { $sum: 1 } } }
+            ],
+            //pipeline-2
+            "countEducation": [
+                //stage 1
+                { $unwind: "$education" },
+                //stage 2
+                { $group: { _id: "$education", count: { $sum: 1 } } }
+            ],
+            //pipeline-3
+            "countSkills": [
+                //stage 1
+                { $unwind: "$skills" },
+                { $group: { _id: "$skills", count: { $sum: 1 } } }
+            ]
+        }
+    }
+])
+
+//-------------- $lookup stage, embedding vs referencing ---------------
+db.orders.aggregate([
+    {   // ata 2 ta collection data ke join kore data dibe
+        $lookup: {
+            from: "pertice2",
+            localField: "userId",
+            foreignField: "_id",
+            as: "user"
+        }
+    }
+
+])
+
+//-------------- What is indexing, COLLSCAN vs IXSCAN ---------------
+// create new filed make a index, index korle direct oi doc find korbe collscan korbe na
+db.getCollection("massive-data").createIndex({email: 1})
+db.getCollection("massive-data").dropIndex({email: 1})//index delete ar jonno
+
+//-------------- Explore compound index and text index ---------------
+//compaund scan {gender: "Male", age: 20}
+// create single word index in a filed
+db.getCollection("massive-data").createIndex({about: "text"})
+db.getCollection("massive-data").find( {$text: { $search: "dolor" }  }).project({about: 1})
+
+
+
+
