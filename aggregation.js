@@ -185,6 +185,122 @@ db.getCollection("massive-data").dropIndex({email: 1})//index delete ar jonno
 db.getCollection("massive-data").createIndex({about: "text"})
 db.getCollection("massive-data").find( {$text: { $search: "dolor" }  }).project({about: 1})
 
+// Practice Task - 2
+// Mastering MongoDB Aggregation & Indexing
 
+//problem 1
+db.getCollection("massive-data").aggregate([
+    //stage 1
+    { $match: { isActive: true} },
+    //stage 2
+    { $group: { _id: "$gender", count: { $sum: 1 } } },
+])
 
+//problem 2
+db.getCollection("massive-data").aggregate([
+    //stage 1
+    { $match: { isActive: true , favoriteFruit: "banana"} },
+    //stage 2
+    { 
+        $project: { name: 1, email: 1 }
+    } 
+])
 
+//problem 3
+db.getCollection("massive-data").aggregate([
+    //stage 1
+    {
+        $group: {
+            _id: "$favoriteFruit",
+            count: { $sum: 1 },
+            avgAge: { $avg: "$age" }
+        }
+    },
+    //stage 2
+    {
+        $project: {
+            avgAge: 1
+        }
+    },
+    //stage 3
+    {
+        $sort: {
+            avgAge: -1
+        }
+    }
+])
+
+//problem 4
+db.getCollection("massive-data").aggregate([
+    { $unwind: "$friends" }, 
+    { $match: { "friends.name": {$regex: /^W/} } } , 
+    { 
+        $group: { 
+            _id: "$_id",
+            uniqueFriends: { $addToSet: "$friends.name" }
+            
+        }
+    } 
+])
+
+//problem 5
+db.getCollection("massive-data").aggregate([
+    {
+        $facet: {
+            // pipeline-1
+            "ageBlow30": [
+                { $match: { age: { $lt: 30 } } },
+                {
+                    $bucket: {
+                        groupBy: "$age",
+                        boundaries: [20, 25, 30],
+                        default: "Other",
+                        output: {
+                            "count": { $sum: 1 },
+                            "names": { $push : "$name" }
+                        }
+                    }
+                },
+                { $sort: {count: 1}}
+            ],
+            //pipe line-2
+            "ageAvobe30" : [
+                    {$match: {age: { $gt: 30}}},
+                    { 
+                        $bucket: {
+                              groupBy: "$age",
+                              boundaries: [ 30, 35, 40 ],
+                              default: "Other",
+                              output: {
+                                "count": { $sum: 1 },
+                                "names" : { $push: "$name" }
+                              }
+                            }
+                    }
+                ]
+        }
+    }
+])
+
+//problem 6
+db.getCollection("massive-data").aggregate([
+    {
+        $addFields: {
+            numBalance: {
+                $toDouble: { $substr: ["$balance", 1, -1] }
+            }
+        }
+    },
+    {
+        $group: {
+            _id: "$company",
+            totalAmount: { $sum: "$numBalance" }
+        }
+    },
+    { 
+        $sort: {totalAmount: -1}
+    },
+    {
+        $limit: 2
+    }
+])
