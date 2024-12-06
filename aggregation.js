@@ -304,3 +304,7 @@ db.getCollection("massive-data").aggregate([
         $limit: 2
     }
 ])
+
+//count documents
+db.users.countDocuments()
+db.users.countDocuments( { gender: "male"})
